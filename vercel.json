@@ -1,27 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "static/**",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "src": "/api/generate",
+      "dest": "/api/generate.py",
+      "methods": ["POST", "OPTIONS"]
     },
     {
       "src": "/(.*)",
-      "dest": "app.py"
+      "dest": "/static/$1"
     }
-  ],
-  "env": {
-    "PYTHONPATH": ".",
-    "FLASK_ENV": "production"
-  }
+  ]
 }

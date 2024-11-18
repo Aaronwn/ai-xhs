@@ -312,6 +312,10 @@
             body: JSON.stringify({ theme }),
           });
 
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
           const data = await response.json();
           if (data.error) {
             throw new Error(data.error);
@@ -319,12 +323,9 @@
 
           // 显示结果区域
           resultSection.classList.remove('hidden');
-
-          // 使用 marked 渲染 Markdown
           noteContent.innerHTML = marked.parse(data.note);
-
-          // 平滑滚动到结果区域
           resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
         } catch (error) {
           noteContent.innerHTML = `<div class="text-red-500">生成失败：${error.message}</div>`;
           resultSection.classList.remove('hidden');

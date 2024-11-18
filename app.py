@@ -57,12 +57,16 @@ def generate_note(theme):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.8,
-            max_tokens=1000
+            max_tokens=1000,
+            timeout=25
         )
         return response.choices[0].message.content
     except Exception as e:
-        print(f"Deepseek API Error: {str(e)}")
-        return str(e)
+        error_message = str(e)
+        print(f"Deepseek API Error: {error_message}")
+        if "timeout" in error_message.lower():
+            return {"error": "请求超时，请稍后重试"}
+        return {"error": f"生成失败: {error_message}"}
 
 @app.route('/')
 def home():
@@ -70,17 +74,20 @@ def home():
 
 @app.route('/api/generate', methods=['POST'])
 def generate():
-    # 打印环境变量值（注意：不要在生产环境中暴露完整的 API key）
-    api_key = os.getenv("DEEPSEEK_API_KEY")
-    print(f"API Key exists: {bool(api_key)}")
+    try:
+        data = request.json
+        theme = data.get('theme')
+        if not theme:
+            return jsonify({"error": "请提供主题"}), 400
 
-    data = request.json
-    theme = data.get('theme')
-    if not theme:
-        return jsonify({"error": "请提供主题"}), 400
+        note = generate_note(theme)
 
-    note = generate_note(theme)
-    return jsonify({"note": note})
+        if isinstance(note, dict) and "error" in note:
+            return jsonify(note), 500
+
+        return jsonify({"note": note})
+    except Exception as e:
+        return jsonify({"error": f"服务器错误: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
