@@ -103,9 +103,15 @@
                 <input
                   type="text"
                   id="theme"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all pl-10"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-200 hover:border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all pl-10 pr-10"
                   placeholder="例如：咖啡店探店、穿搭分享、读书笔记..." />
                 <i class="fas fa-magic absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-500"></i>
+                <button
+                  id="clearInput"
+                  class="hidden absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  onclick="clearThemeInput()">
+                  <i class="fas fa-times-circle"></i>
+                </button>
               </div>
             </div>
             <button
@@ -223,36 +229,32 @@
       </div>
     </section>
 
-    <!-- Footer (改进设计) -->
+    <!-- Footer -->
     <footer class="bg-gradient-to-b from-pink-50 to-white py-16">
       <div class="max-w-7xl mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div class="space-y-4">
             <div class="flex items-center space-x-2">
               <span class="text-2xl">✨</span>
               <span class="font-bold text-gray-900">小红书助手</span>
             </div>
-            <p class="text-gray-600">AI 驱动的内容创作助手，让创作更轻松</p>
+            <p class="text-gray-600">
+              AI 驱动的内容创作助手，让创作更轻松
+            </p>
           </div>
           <div>
-            <h4 class="font-medium text-gray-900 mb-4">产品</h4>
+            <h4 class="font-medium text-gray-900 mb-4">快速导航</h4>
             <ul class="space-y-3">
-              <li><a href="#features" class="text-gray-600 hover:text-pink-500 transition-colors">使用说明</a></li>
-              <li><a href="#how-it-works" class="text-gray-600 hover:text-pink-500 transition-colors">功能特点</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-medium text-gray-900 mb-4">支持</h4>
-            <ul class="space-y-3">
-              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">使用教程</a></li>
-              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">常见问题</a></li>
+              <li><a href="#features" class="text-gray-600 hover:text-pink-500 transition-colors">功能特点</a></li>
+              <li><a href="#how-it-works" class="text-gray-600 hover:text-pink-500 transition-colors">使用说明</a></li>
+              <li><a href="#generate" class="text-gray-600 hover:text-pink-500 transition-colors">开始使用</a></li>
             </ul>
           </div>
           <div>
             <h4 class="font-medium text-gray-900 mb-4">联系我们</h4>
             <ul class="space-y-3">
-              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">反馈建议</a></li>
-              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">商务合作</a></li>
+              <li><a href="mailto:contact@example.com" class="text-gray-600 hover:text-pink-500 transition-colors">反馈建议</a></li>
+              <li><a href="mailto:business@example.com" class="text-gray-600 hover:text-pink-500 transition-colors">商务合作</a></li>
             </ul>
           </div>
         </div>
@@ -355,6 +357,21 @@
         setTimeout(() => {
           button.innerHTML = originalHTML;
         }, 2000);
+      }
+
+      // 监听输入框变化，显示/隐藏清空按钮
+      const themeInput = document.getElementById('theme');
+      const clearButton = document.getElementById('clearInput');
+
+      themeInput.addEventListener('input', function() {
+        clearButton.classList.toggle('hidden', !this.value);
+      });
+
+      // 清空输入框内容
+      function clearThemeInput() {
+        themeInput.value = '';
+        clearButton.classList.add('hidden');
+        themeInput.focus(); // 保持输入框焦点
       }
     </script>
   </body>
