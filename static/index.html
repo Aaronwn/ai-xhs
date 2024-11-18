@@ -1,225 +1,361 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>小红书爆款笔记生成器 - AI 驱动的内容创作助手</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
-        /* 保留原有的 Markdown 样式 */
-        #noteContent {
-            line-height: 1.6;
-        }
-        #noteContent h3 {
-            color: #ff2442;
-            margin-top: 1.5em;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        #noteContent hr {
-            border-color: #ff2442;
-            margin: 1.5em 0;
-        }
-        #noteContent ul {
-            list-style-type: none;
-            padding-left: 1.5em;
-            margin: 1em 0;
-        }
-        #noteContent ul li {
-            margin: 0.5em 0;
-        }
-        #noteContent ul li::before {
-            content: "•";
-            color: #ff2442;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-        #noteContent strong {
-            color: #ff2442;
-            font-weight: bold;
-        }
-        #noteContent p {
-            margin: 1em 0;
-        }
+      /* 保留原有的 Markdown 样式 */
+      #noteContent {
+        line-height: 1.6;
+      }
+      #noteContent h3 {
+        color: #ff2442;
+        margin-top: 1.5em;
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+      #noteContent hr {
+        border-color: #ff2442;
+        margin: 1.5em 0;
+      }
+      #noteContent ul {
+        list-style-type: none;
+        padding-left: 1.5em;
+        margin: 1em 0;
+      }
+      #noteContent ul li {
+        margin: 0.5em 0;
+      }
+      #noteContent ul li::before {
+        content: '•';
+        color: #ff2442;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+      }
+      #noteContent strong {
+        color: #ff2442;
+        font-weight: bold;
+      }
+      #noteContent p {
+        margin: 1em 0;
+      }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #FF2442 0%, #FF77BC 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+      .gradient-text {
+        background: linear-gradient(135deg, #ff2442 0%, #ff77bc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
 
-        .hero-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ff2442' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
-        }
+      .hero-pattern {
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ff2442' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+      }
     </style>
-</head>
-<body class="bg-gradient-to-b from-pink-50 to-white min-h-screen hero-pattern">
+  </head>
+  <body class="bg-gradient-to-b from-pink-50 to-white min-h-screen hero-pattern">
     <!-- Navbar -->
     <nav class="border-b bg-white/80 backdrop-blur-md fixed w-full top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl">✨</span>
-                <span class="font-bold text-gray-900">小红书助手</span>
-            </div>
-            <div class="flex items-center space-x-6">
-                <a href="#features" class="text-gray-600 hover:text-gray-900 transition-colors">功能特点</a>
-                <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition-colors">使用说明</a>
-                <a href="#" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors">开始使用</a>
-            </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl">✨</span>
+          <span class="font-bold text-gray-900">小红书助手</span>
         </div>
+        <div class="flex items-center space-x-6">
+          <a href="#features" class="text-gray-600 hover:text-gray-900 transition-colors">功能特点</a>
+          <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition-colors">使用说明</a>
+          <a href="#generate" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors"
+            >开始使用</a
+          >
+        </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="pt-32 pb-20 px-4 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-pink-100/50 to-white/50"></div>
-        <div class="max-w-4xl mx-auto text-center relative">
-            <div class="animate-fade-in-up space-y-6">
-                <span class="inline-block px-4 py-1.5 bg-pink-100 text-pink-600 rounded-full text-sm font-medium mb-4">
-                    AI 驱动的内容创作助手
-                </span>
-                <h1 class="text-5xl font-bold gradient-text mb-6">
-                    让 AI 为你打造爆款小红书笔记
-                </h1>
-                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                    智能生成吸睛标题和优质内容，让你的笔记快速获得更多点赞与关注
-                </p>
-
-                <!-- Main Input Section -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-lg border border-pink-100">
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">输入创作主题</label>
-                            <div class="relative">
-                                <input type="text" id="theme"
-                                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all pl-10"
-                                    placeholder="例如：咖啡店探店、穿搭分享、读书笔记..." />
-                                <i class="fas fa-magic absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-500"></i>
-                            </div>
-                        </div>
-                        <button id="generateBtn" onclick="generateNote()"
-                            class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-6 rounded-lg font-medium hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2">
-                            <i class="fas fa-wand-magic-sparkles"></i>
-                            <span>一键生成爆款笔记</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Result Section -->
-                <div id="resultSection" class="hidden mt-8">
-                    <div class="bg-white rounded-2xl shadow-xl p-8">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold gradient-text">✨ 生成结果</h3>
-                            <button onclick="copyToClipboard()"
-                                class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors flex items-center space-x-2">
-                                <i class="fas fa-copy"></i>
-                                <span>复制文本</span>
-                            </button>
-                        </div>
-                        <div id="noteContent" class="prose max-w-none text-left"></div>
-                    </div>
-                </div>
-            </div>
+      <div class="absolute inset-0 bg-gradient-to-b from-pink-100/50 to-white/50"></div>
+      <div class="max-w-4xl mx-auto text-center relative">
+        <div class="animate-fade-in-up space-y-6">
+          <span class="inline-block px-4 py-1.5 bg-pink-100 text-pink-600 rounded-full text-sm font-medium mb-4">
+            AI 驱动的内容创作助手
+          </span>
+          <h1 class="text-5xl font-bold gradient-text mb-6">让 AI 为你打造爆款小红书笔记</h1>
+          <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            智能生成吸睛标题和优质内容，让你的笔记快速获得更多点赞与关注
+          </p>
         </div>
+      </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-12 bg-gradient-to-r from-pink-500 to-rose-500 text-white">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="text-center">
-                <div class="text-4xl font-bold mb-2">100万+</div>
-                <div class="text-pink-100">生成笔记数量</div>
+    <!-- Generate Section -->
+    <section id="generate" class="py-20 px-4">
+      <div class="max-w-4xl mx-auto">
+        <!-- 将原来的输入区域移到这里 -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-lg border border-pink-100">
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">输入创作主题</label>
+              <div class="relative">
+                <input
+                  type="text"
+                  id="theme"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all pl-10"
+                  placeholder="例如：咖啡店探店、穿搭分享、读书笔记..." />
+                <i class="fas fa-magic absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-500"></i>
+              </div>
             </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold mb-2">98%</div>
-                <div class="text-pink-100">用户好评率</div>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold mb-2">5秒</div>
-                <div class="text-pink-100">平均生成时间</div>
-            </div>
+            <button
+              id="generateBtn"
+              onclick="generateNote()"
+              class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-6 rounded-lg font-medium hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2">
+              <i class="fas fa-wand-magic-sparkles"></i>
+              <span>一键生成爆款笔记</span>
+            </button>
+          </div>
         </div>
+
+        <!-- Result Section -->
+        <div id="resultSection" class="hidden mt-8">
+          <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-bold gradient-text">✨ 生成结果</h3>
+              <button
+                onclick="copyToClipboard()"
+                class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors flex items-center space-x-2">
+                <i class="fas fa-copy"></i>
+                <span>复制文本</span>
+              </button>
+            </div>
+            <div id="noteContent" class="prose max-w-none text-left"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- 功能特点 -->
+    <section id="features" class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">功能特点</h2>
+          <p class="text-xl text-gray-600">专业的 AI 创作助手，让内容创作更轻松</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="group p-8 rounded-3xl transition-all duration-300 text-center">
+            <div
+              class="bg-pink-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+              <span class="text-4xl">⚡️</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">智能创作</h3>
+            <p class="text-gray-600 leading-relaxed">基于 GPT 大语言模型，智能生成符合小红书调性的优质内容</p>
+          </div>
+
+          <div class="group p-8 rounded-3xl transition-all duration-300 text-center">
+            <div
+              class="bg-purple-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+              <span class="text-4xl">🎯</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">精准定位</h3>
+            <p class="text-gray-600 leading-relaxed">深度理解平台特点，生成更容易获得互动的内容结构</p>
+          </div>
+
+          <div class="group p-8 rounded-3xl transition-all duration-300 text-center">
+            <div
+              class="bg-blue-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+              <span class="text-4xl">✨</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">一键生成</h3>
+            <p class="text-gray-600 leading-relaxed">快速生成标题、正文和话题标签，节省创作时间</p>
+          </div>
+        </div>
+      </div>
     </section>
 
+    <!-- 使用说明-->
+    <section id="how-it-works" class="py-24 bg-gradient-to-b from-white to-pink-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">使用说明</h2>
+          <p class="text-xl text-gray-600">简单三步，快速创作优质内容</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="relative p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300">
+            <div
+              class="absolute -top-6 left-8 bg-gradient-to-r from-pink-500 to-rose-500 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+              1
+            </div>
+            <div class="pt-6">
+              <h3 class="text-xl font-semibold mb-4">输入主题</h3>
+              <p class="text-gray-600 leading-relaxed">
+                在输入框中填写你想创作的主题方向，例如：咖啡店探店、穿搭分享、读书笔记等。
+              </p>
+            </div>
+          </div>
+
+          <div class="relative p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300">
+            <div
+              class="absolute -top-6 left-8 bg-gradient-to-r from-pink-500 to-rose-500 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+              2
+            </div>
+            <div class="pt-6">
+              <h3 class="text-xl font-semibold mb-4">AI 生成内容</h3>
+              <p class="text-gray-600 leading-relaxed">
+                点击生成按钮，AI 将快速为你创作一篇优质的小红书笔记，包含标题、正文和话题标签。
+              </p>
+            </div>
+          </div>
+
+          <div class="relative p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300">
+            <div
+              class="absolute -top-6 left-8 bg-gradient-to-r from-pink-500 to-rose-500 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+              3
+            </div>
+            <div class="pt-6">
+              <h3 class="text-xl font-semibold mb-4">一键复制发布</h3>
+              <p class="text-gray-600 leading-relaxed">生成完成后，点击复制按钮，直接粘贴到小红书编辑器中即可发布。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer (改进设计) -->
+    <footer class="bg-gradient-to-b from-pink-50 to-white py-16">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div class="space-y-4">
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl">✨</span>
+              <span class="font-bold text-gray-900">小红书助手</span>
+            </div>
+            <p class="text-gray-600">AI 驱动的内容创作助手，让创作更轻松</p>
+          </div>
+          <div>
+            <h4 class="font-medium text-gray-900 mb-4">产品</h4>
+            <ul class="space-y-3">
+              <li><a href="#features" class="text-gray-600 hover:text-pink-500 transition-colors">使用说明</a></li>
+              <li><a href="#how-it-works" class="text-gray-600 hover:text-pink-500 transition-colors">功能特点</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-medium text-gray-900 mb-4">支持</h4>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">使用教程</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">常见问题</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-medium text-gray-900 mb-4">联系我们</h4>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">反馈建议</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-pink-500 transition-colors">商务合作</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-200 mt-12 pt-8 text-center text-gray-600">
+          <p>© 2024 小红书爆款笔记生成器 - AI 驱动的内容创作助手</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 添加平滑滚动效果 -->
     <script>
-        async function generateNote() {
-            const theme = document.getElementById('theme').value.trim();
-            if (!theme) {
-                alert('请输入主题');
-                return;
-            }
+      // 为所有锚点链接添加平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
 
-            const generateBtn = document.getElementById('generateBtn');
-            const resultSection = document.getElementById('resultSection');
-            const noteContent = document.getElementById('noteContent');
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }
+        });
+      });
 
-            // 更新按钮状态为加载中
-            generateBtn.disabled = true;
-            generateBtn.innerHTML = `
+      async function generateNote() {
+        const theme = document.getElementById('theme').value.trim();
+        if (!theme) {
+          alert('请输入主题');
+          return;
+        }
+
+        const generateBtn = document.getElementById('generateBtn');
+        const resultSection = document.getElementById('resultSection');
+        const noteContent = document.getElementById('noteContent');
+
+        // 更新按钮状态为加载中
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <div class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                     <span>生成中...</span>
                 </div>
             `;
 
-            try {
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ theme }),
-                });
+        try {
+          const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ theme }),
+          });
 
-                const data = await response.json();
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+          const data = await response.json();
+          if (data.error) {
+            throw new Error(data.error);
+          }
 
-                // 显示结果区域
-                resultSection.classList.remove('hidden');
+          // 显示结果区域
+          resultSection.classList.remove('hidden');
 
-                // 使用 marked 渲染 Markdown
-                noteContent.innerHTML = marked.parse(data.note);
+          // 使用 marked 渲染 Markdown
+          noteContent.innerHTML = marked.parse(data.note);
 
-                // 平滑滚动到结果区域
-                resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (error) {
-                noteContent.innerHTML = `<div class="text-red-500">生成失败：${error.message}</div>`;
-                resultSection.classList.remove('hidden');
-            } finally {
-                // 恢复按钮状态
-                generateBtn.disabled = false;
-                generateBtn.innerHTML = `
+          // 平滑滚动到结果区域
+          resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (error) {
+          noteContent.innerHTML = `<div class="text-red-500">生成失败：${error.message}</div>`;
+          resultSection.classList.remove('hidden');
+        } finally {
+          // 恢复按钮状态
+          generateBtn.disabled = false;
+          generateBtn.innerHTML = `
                     <i class="fas fa-wand-magic-sparkles"></i>
                     <span>一键生成爆款笔记</span>
                 `;
-            }
         }
+      }
 
-        function copyToClipboard() {
-            const noteContent = document.getElementById('noteContent');
-            const textArea = document.createElement('textarea');
-            textArea.value = noteContent.textContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
+      function copyToClipboard() {
+        const noteContent = document.getElementById('noteContent');
+        const textArea = document.createElement('textarea');
+        textArea.value = noteContent.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
 
-            // 显示复制成功提示
-            const button = event.target.closest('button');
-            const originalHTML = button.innerHTML;
-            button.innerHTML = `
+        // 显示复制成功提示
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.innerHTML = `
                 <i class="fas fa-check"></i>
                 <span>已复制</span>
             `;
-            setTimeout(() => {
-                button.innerHTML = originalHTML;
-            }, 2000);
-        }
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+        }, 2000);
+      }
     </script>
-</body>
+  </body>
 </html>
