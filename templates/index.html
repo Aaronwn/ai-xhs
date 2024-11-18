@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书爆款笔记生成器 - AI 驱动的内容创作助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-gradient-to-b from-pink-50 to-white min-h-screen">
+    <!-- Navbar -->
+    <nav class="border-b bg-white/80 backdrop-blur-md fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">✨</span>
+                <span class="font-bold text-gray-900">小红书助手</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#features" class="text-gray-600 hover:text-gray-900">功能</a>
+                <a href="#how-it-works" class="text-gray-600 hover:text-gray-900">使用说明</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="animate-fade-in-up">
+                <h1 class="text-5xl font-bold bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent mb-6">
+                    小红书爆款笔记生成器
+                </h1>
+                <p class="text-xl text-gray-600 mb-8">
+                    让 AI 为你打造爆款内容，轻松获得更多点赞与关注
+                </p>
+            </div>
+
+            <!-- Main Input Section -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 max-w-2xl mx-auto">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">输入创作主题</label>
+                        <input type="text" id="topic"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                            placeholder="例如：咖啡店探店、穿搭分享、读书笔记..." />
+                    </div>
+                    <button onclick="generateContent()"
+                        class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-6 rounded-lg font-medium hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                        ✨ 一键生成爆款笔记
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-16">为什么选择我们？</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center p-6 rounded-xl hover:shadow-lg transition-all">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl">⚡️</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">快速生成</h3>
+                    <p class="text-gray-600">秒级生成优质内容，节省创作时间，提高发文效率</p>
+                </div>
+                <div class="text-center p-6 rounded-xl hover:shadow-lg transition-all">
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl">🎯</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">精准定位</h3>
+                    <p class="text-gray-600">深度理解小红书调性，生成符合平台特点的内容</p>
+                </div>
+                <div class="text-center p-6 rounded-xl hover:shadow-lg transition-all">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl">🚀</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">数据驱动</h3>
+                    <p class="text-gray-600">基于海量数据分析，提供更容易爆款的内容方向</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-16">使用流程</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <span class="font-bold text-pink-500">1</span>
+                    </div>
+                    <h3 class="font-medium mb-2">输入主题</h3>
+                    <p class="text-gray-600 text-sm">选择你想创作的内容方向</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <span class="font-bold text-pink-500">2</span>
+                    </div>
+                    <h3 class="font-medium mb-2">一键生成</h3>
+                    <p class="text-gray-600 text-sm">AI 快速生成内容框架</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <span class="font-bold text-pink-500">3</span>
+                    </div>
+                    <h3 class="font-medium mb-2">优化调整</h3>
+                    <p class="text-gray-600 text-sm">根据需求微调内容</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <span class="font-bold text-pink-500">4</span>
+                    </div>
+                    <h3 class="font-medium mb-2">发布获赞</h3>
+                    <p class="text-gray-600 text-sm">收获点赞与关注</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="bg-white rounded-2xl max-w-2xl mx-auto mt-20 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">生成结果</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+
+            <!-- 添加加载动画 -->
+            <div id="loadingIndicator" class="hidden text-center py-8">
+                <div class="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent mx-auto mb-4"></div>
+                <p class="text-gray-600">正在创作中，请稍候...</p>
+            </div>
+
+            <div id="resultContent" class="prose max-w-none">
+                <!-- 生成的内容将在这里显示 -->
+            </div>
+
+            <!-- 添加复制按钮 -->
+            <button onclick="copyToClipboard()"
+                class="mt-4 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors float-right">
+                复制文本
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+            <p>© 2024 小红书爆款笔记生成器 - AI 驱动的内容创作助手</p>
+        </div>
+    </footer>
+
+    <script>
+        async function generateContent() {
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) {
+                alert('请输入主题');
+                return;
+            }
+
+            const resultModal = document.getElementById('resultModal');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const resultContent = document.getElementById('resultContent');
+
+            // 显示模态框和加载动画
+            resultModal.classList.remove('hidden');
+            loadingIndicator.classList.remove('hidden');
+            resultContent.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ theme: topic }), // 注意这里使用 theme 作为键名，与后端对应
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // 使用 marked 渲染 Markdown
+                resultContent.innerHTML = marked.parse(data.note);
+            } catch (error) {
+                resultContent.innerHTML = `<div class="text-red-500">生成失败：${error.message}</div>`;
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+        }
+
+        function copyToClipboard() {
+            const resultContent = document.getElementById('resultContent');
+            const textArea = document.createElement('textarea');
+            textArea.value = resultContent.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            // 显示复制成功提示
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '已复制！';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        }
+    </script>
+
+    <!-- 添加 marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>
