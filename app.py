@@ -10,8 +10,11 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# 初始化 OpenAI 客户端
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# 初始化 OpenAI 客户端，使用 Deepseek API
+client = OpenAI(
+    api_key=os.getenv("DEEPSEEK_API_KEY"),
+    base_url="https://api.deepseek.com"
+)
 
 def generate_note(theme):
     """生成小红书风格的笔记"""
@@ -33,7 +36,7 @@ def generate_note(theme):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="deepseek-chat",  # 修改为 Deepseek 的模型名
             messages=[
                 {"role": "system", "content": "你是一位深谙小红书运营之道的博主，擅长创作爆款笔记。"},
                 {"role": "user", "content": prompt}
@@ -43,7 +46,7 @@ def generate_note(theme):
         )
         return response.choices[0].message.content
     except Exception as e:
-        print(f"OpenAI API Error: {str(e)}")  # 添加错误日志
+        print(f"Deepseek API Error: {str(e)}")  # 修改错误日志提示
         return str(e)
 
 @app.route('/')
@@ -53,7 +56,7 @@ def home():
 @app.route('/api/generate', methods=['POST'])
 def generate():
     # 打印环境变量值（注意：不要在生产环境中暴露完整的 API key）
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("DEEPSEEK_API_KEY")
     print(f"API Key exists: {bool(api_key)}")
 
     data = request.json
